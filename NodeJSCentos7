@@ -1,0 +1,52 @@
+#/bin/bash.sh
+echo "Instaling tools..."
+sudo yum -y install epel-release
+sudo yum -y install nodejs
+sudo yum -y install npm
+node -v
+echo "Node JS utilities..."
+npm install -g connect
+npm install -g serve-static
+npm install -g bower
+cd $HOME
+yum -y install git wget unzip
+sudo bower --allow-root install bootstrap
+echo "making unimportant extras..."
+mkdir /na
+mkdir /na/e1
+echo "Downloading Bootstrap..."
+wget https://github.com/twbs/bootstrap/releases/download/v3.3.7/bootstrap-3.3.7-dist.zip --no-check-certificate
+unzip bootstrap-3.3.7-dist.zip
+cd bootstrap-3.3.7-dist/css/
+wget https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.js --no-check-certificate
+cp angular.js bootstrap.css bootstrap-theme.css /na/e1
+echo "making magic ;) magazo..."
+cd /na
+cat >server.js<<EOF
+var connect = require('connect');
+serveStatic = require('serve-static');
+var app = connect();
+app.use(serveStatic("."));
+app.listen(5000);
+console.log('Server started');
+EOF
+echo "magic finish here :(..."
+npm link connect
+npm link serve-static
+cd /na/e1/
+echo "almost finish...dont worry"
+cat >index.html<<EOF
+<!DOCTYPE html>
+<html ng-app>
+<head>
+<script src="angular.js"></script>
+<link href="bootstrap.css" rel="stylesheet"/>
+<link href="bootstrap-theme.css" rel="stylesheet"/>
+</head>
+<body>
+<div class="btn btn-default">{{"AngularJS"}}</div>
+<div class="btn btn-success">Bootstrap</div>
+</body>
+</html>
+EOF
+echo "Complete we finish, just run node server.js on /na check http://yourip:5000/e1"
